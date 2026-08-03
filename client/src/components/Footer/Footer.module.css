@@ -1,0 +1,24 @@
+.footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 24px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.footer p {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted) !important;
+  font-weight: 400 !important;
+  margin-top: 4px;
+}
