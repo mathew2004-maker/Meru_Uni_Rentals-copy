@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import PasswordInput from '../components/PasswordInput/PasswordInput';
@@ -33,18 +32,6 @@ function RegisterPage() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setError('');
-    try {
-      const res = await api.post('/auth/google', {
-        credential: credentialResponse.credential,
-      });
-      login(res.data.token, res.data.user);
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Google signup failed');
-    }
-  };
 
   return (
     <div className={styles.page}>
@@ -102,17 +89,6 @@ function RegisterPage() {
 
         <div className={styles.divider}>
           <span>or</span>
-        </div>
-
-        <div className={styles.googleBtnWrapper}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => setError('Google signup failed')}
-            size="large"
-            width="100%"
-            text="signup_with"
-            shape="pill"
-          />
         </div>
 
         <p className={styles.switch}>

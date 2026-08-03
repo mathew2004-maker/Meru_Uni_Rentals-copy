@@ -125,16 +125,6 @@
   background: var(--color-border);
 }
 
-.googleBtnWrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.googleBtnWrapper > div {
-  width: 100% !important;
-}
-
 @media (max-width: 480px) {
   .card {
     padding: 28px 20px;
