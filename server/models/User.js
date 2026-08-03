@@ -23,11 +23,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    googleId: {
-      type: String,
-      default: null,
-      sparse: true,
-    },
     resetCode: {
       type: String,
       default: null,

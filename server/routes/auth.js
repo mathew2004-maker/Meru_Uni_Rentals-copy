@@ -1,11 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
 import { sendEmail } from '../utils/email.js';
-
 const router = express.Router();
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 // REGISTER
 
@@ -168,73 +166,6 @@ router.post('/reset-password', async (req, res) => {
     console.error('RESET ERROR:', err);
     res.status(500).json({ message: err.message });
   }
-});
-
-
-// GOOGLE OAUTH LOGIN / REGISTER
-router.post('/google', async (req, res) => {
-  try {
-    const { credential } = req.body;
-
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, name, picture } = payload;
-
-    if (!email) {
-      return res.status(400).json({ message: 'Google account email not available' });
-    }
-
-    let user = await User.findOne({ $or: [{ googleId }, { email }] });
-
-    if (!user) {
-      // Create new user from Google data
-      const randomPassword = Math.random().toString(36).slice(-16) + Date.now().toString(36);
-      user = new User({
-        username: name || email.split('@')[0],
-        email,
-        password: randomPassword,
-        googleId,
-      });
-      await user.save();
-
-      // Optional welcome email
-      try {
-        await sendEmail(
-          email,
-          'Welcome to Meru Rooms',
-          `<h2>Welcome, ${user.username}!</h2><p>You signed up with Google. Start posting vacant rooms near Meru University and help fellow comrades find accommodation easily.</p>`
-        );
-      } catch (e) {
-        console.log('Welcome email failed:', e.message);
-      }
-    } else if (!user.googleId) {
-      // Existing email user — link Google to their account
-      user.googleId = googleId;
-      await user.save();
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.json({
-      token,
-      user: { id: user._id, username: user.username, email: user.email },
-    });
-  } catch (err) {
-  console.error("GOOGLE AUTH ERROR:", err);
-  console.error("MESSAGE:", err.message);
-
-  res.status(400).json({
-    message: err.message
-  });
-}
 });
 
 
