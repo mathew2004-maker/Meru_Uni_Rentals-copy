@@ -30,8 +30,12 @@ router.get('/:id', async (req, res) => {
 // POST new room
 router.post('/', authenticate, upload.array('images', 8), async (req, res) => {
   try {
+    const files = req.files || [];
+
     const imageUrls = await Promise.all(
-      req.files.map((file) => uploadToCloudinary(file.buffer, 'meru-rooms'))
+      files.map(file =>
+        uploadToCloudinary(file.buffer, 'meru-rooms')
+      )
     );
 
     const amenities = req.body.amenities
@@ -78,12 +82,16 @@ router.put('/:id', authenticate, upload.array('images', 8), async (req, res) => 
         : [req.body.existingImages];
     }
 
+    const files = req.files || [];
+
     const newImageUrls =
-      req.files.length > 0
+      files.length > 0
         ? await Promise.all(
-            req.files.map((file) => uploadToCloudinary(file.buffer, 'meru-rooms'))
+            files.map(file =>
+              uploadToCloudinary(file.buffer, 'meru-rooms')
+            )
           )
-        : [];
+      : [];
 
     const totalImages = keptImages.length + newImageUrls.length;
     if (totalImages > 8) {
