@@ -26,11 +26,16 @@ app.use(express.json());
 app.use('/api/rooms', roomRoutes);
 app.use('/api/auth', authRoutes);
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => console.error('❌ MongoDB error:', err));
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+
+try {
+  await mongoose.connect(process.env.MONGODB_URI);
+  console.log("MongoDB connected");
+  app.listen(PORT, () => {
+     console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+} catch (err) {
+  console.error(err);
+}
+
+
