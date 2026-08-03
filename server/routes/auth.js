@@ -24,15 +24,7 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     // Optional: Send welcome email
-    try {
-      await sendEmail(
-        email,
-        'Welcome to Meru Rooms',
-        `<h2>Welcome, ${username}!</h2><p>Start posting vacant rooms near Meru University and help fellow comrades find accommodation easily.</p>`
-      );
-    } catch (e) {
-      console.log('Welcome email failed:', e.message);
-    }
+    
 
     const token = jwt.sign(
       { userId: user._id, username: user.username },
