@@ -10,15 +10,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// app.use(
-//   cors({
-//     origin: [
-//       'http://localhost:3000', // Local development
-//       'https://meru-uni-rentals-copy.vercel.app', // Production frontend
-//     ],
-//     credentials: true,
-//   })
-// );
 
 app.use(cors());
 
