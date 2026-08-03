@@ -10,32 +10,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// app.use(cors({
-//   origin: [
-//     'http://localhost:3000',
-//     'http://localhost:5173',
-//     'https://meru-uni-rentals-api.onrender.com',
-//     'https://meru-uni-rentals.vercel.app', // your actual Vercel URL
-//   ],
-//   credentials: true,
-// }));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173', // Local development
+      'https://meru-uni-rentals-copy.vercel.app', // Production frontend
+    ],
+    credentials: true,
+  })
+);
 
-app.use(cors());
 app.use(express.json());
 
 app.use('/api/rooms', roomRoutes);
 app.use('/api/auth', authRoutes);
 
-
-
 try {
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log("MongoDB connected");
+  console.log('✅ MongoDB connected');
+
   app.listen(PORT, () => {
-     console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
   });
 } catch (err) {
-  console.error(err);
+  console.error('❌ Failed to connect to MongoDB:', err);
 }
-
-
